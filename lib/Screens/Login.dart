@@ -11,12 +11,44 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin{
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  late AnimationController controller;
+  late Animation<double> logoFadeAnimation;
+  late Animation<Offset> slideAnimation;
+  late Animation<double> scaleAnimation;
 
   bool _isPasswordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+
+    logoFadeAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeIn,
+    ),);
+
+    slideAnimation = Tween(
+      begin: const Offset(-1, 0),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Curves.linear,
+      ),
+    );
+    scaleAnimation = Tween<double>(begin: 0, end: 1).animate(controller);
+
+    controller.forward();
+  }
 
   @override
   void dispose() {
@@ -42,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
           content: Text('Login successful'),
           backgroundColor: Colors.green,
         ));
-        context.goNamed('home');
+        context.pushReplacement('/home');
         // Example: Navigate to another screen
         // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
       } on FirebaseAuthException catch (e) {
@@ -111,52 +143,75 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Form(
                 key: _formKey,
                 child: Column(
+
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFF323232),
-                        borderRadius: BorderRadius.circular(12),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 24.0),
+                      child: FadeTransition(
+                        opacity: logoFadeAnimation,
+                        child: Image.asset(
+                          'images/netflix.png',
+                          height: 120,
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                      padding: const EdgeInsets.all(10.0),
-                      child: TextFormField(
-                        controller: _emailController,
-                        decoration: const InputDecoration(
-                          label: Text('Email'),
-                          hintText: 'Enter your email',
-                          hintStyle: TextStyle(color: Color(0xFFb2b2b2)),
-                          border: InputBorder.none,
+                    ),
+                    SlideTransition(
+                      position: slideAnimation,
+                      child: ScaleTransition(
+                        scale: scaleAnimation,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xFF323232),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.all(10.0),
+                          child: TextFormField(
+                            controller: _emailController,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter your email',
+                              hintStyle: TextStyle(color: Color(0xFFb2b2b2)),
+                              border: InputBorder.none,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(height: 16.0),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xFF323232),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: new EdgeInsets.all(10.0),
-                      child: TextFormField(
-                        controller: _passwordController,
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Enter your password',
-                          hintStyle: TextStyle(color: Color(0xFFb2b2b2)),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isPasswordVisible
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+                    SlideTransition(
+                      position: slideAnimation,
+                      child: ScaleTransition(
+                        scale: scaleAnimation,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color(0xFF323232),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: new EdgeInsets.all(10.0),
+                          child: TextFormField(
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Enter your password',
+                              hintStyle: TextStyle(color: Color(0xFFb2b2b2)),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isPasswordVisible
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisible = !_isPasswordVisible;
+                                  });
+                                },
+                              ),
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _isPasswordVisible = !_isPasswordVisible;
-                              });
-                            },
+                            obscureText: !_isPasswordVisible,
+                            validator: _validatePassword,
                           ),
                         ),
-                        obscureText: !_isPasswordVisible,
-                        validator: _validatePassword,
                       ),
                     ),
                     const SizedBox(height: 24.0),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:netflixclone/utils/Custom_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'package:netflixclone/firebase_options.dart';
 
 import 'nav_helper/nav_helper.dart';
 
