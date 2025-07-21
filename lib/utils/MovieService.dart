@@ -6,7 +6,7 @@ class MovieService {
     BaseOptions(
       baseUrl: 'https://api.themoviedb.org/3',
       headers: {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZGQyYzNjZWMzNGIwYzUzNjVjNDA5ZDUxYmYyMThkYyIsIm5iZiI6MTc1MjkxNTA5MS41NTcsInN1YiI6IjY4N2I1YzkzNDY4ZDc5MTQwMjcyYzI5ZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.n9sZJL2RfTgqtFSF0RURVMATizkkfRNQEF42j_T98ng',
+        'Authorization': 'Bearer YOUR_API_KEY',
         'accept': 'application/json',
       },
     ),
