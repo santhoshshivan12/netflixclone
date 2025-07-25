@@ -1,0 +1,49 @@
+{
+  "app_name": "Netflix Clone",
+  "onboarding": {
+    "title_1": "Enjoy on your TV",
+    "desc_1": "Watch on Smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players, and more.",
+    "title_2": "Download your shows to watch offline",
+    "desc_2": "Save your favorites easily and always have something to watch.",
+    "title_3": "Watch everywhere",
+    "desc_3": "Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV.",
+    "title_4": "Create profiles for kids",
+    "desc_4": "Send kids on adventures with their favorite characters in a space made just for them—free with your membership.",
+    "get_started": "GET STARTED",
+    "skip": "SKIP",
+    "next": "NEXT"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "sign_in": "Sign In",
+    "forgot_password": "Forgot Password?",
+    "login_error": "Login failed. Please try again.",
+    "email_required": "Email is required",
+    "invalid_email": "Enter a valid email",
+    "password_required": "Password is required",
+    "password_short": "Password must be at least 6 characters"
+  },
+  "home": {
+    "trending": "Trending Now",
+    "latest": "Latest Releases",
+    "coming_soon": "Coming Soon",
+    "top_rated": "Top Rated"
+  },
+  "search": {
+    "hint": "Search for movies...",
+    "no_results": "No results found",
+    "try_again": "Please try a different search"
+  },
+  "profile": {
+    "title": "Profile",
+    "account": "Account",
+    "settings": "Settings",
+    "language": "Language",
+    "sign_out": "Sign Out",
+    "help": "Help Center",
+    "about": "About",
+    "notifications": "Notifications",
+    "downloads": "Downloads"
+  }
+} 

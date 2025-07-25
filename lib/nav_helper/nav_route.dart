@@ -8,4 +8,5 @@ class NavRoutes {
   static const String fastLaughs = '/fast-laughs';
   static const String search = '/search';
   static const String downloads = '/downloads';
+  static const String profile = '/profile';
 }

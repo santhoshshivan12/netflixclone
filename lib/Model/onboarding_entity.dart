@@ -1,31 +1,35 @@
 
-class OnBoardingEntity{
+class OnBoardingEntity {
   final String image;
-  final String heading;
+  final String title;
   final String description;
 
-  OnBoardingEntity({required this.image, required this.heading, required this.description});
+  OnBoardingEntity({
+    required this.image,
+    required this.title,
+    required this.description,
+  });
 
-  static List<OnBoardingEntity> onBoardingData=[
+  static List<OnBoardingEntity> onBoardingData = [
     OnBoardingEntity(
-        image: 'images/devices.png',
-        description: "Stream on your phone tablet, laptop,and TV without paying more.",
-        heading: "Watch Everywhere"
+      image: 'images/background.png',
+      title: 'Enjoy on your TV',
+      description: 'Watch on Smart TVs, PlayStation, Xbox, Chromecast, Apple TV, Blu-ray players, and more.',
     ),
     OnBoardingEntity(
-        image: 'images/download.png',
-        description: "Always have something to watch.",
-        heading: "Download and\n Watch offline"
+      image: 'images/devices.png',
+      title: 'Download your shows to watch offline',
+      description: 'Save your favorites easily and always have something to watch.',
     ),
     OnBoardingEntity(
-        image: 'images/contract.png',
-        description: "Join today, no reason to wait",
-        heading: "Cancel online at\n any time"
+      image: 'images/download.png',
+      title: 'Watch everywhere',
+      description: 'Stream unlimited movies and TV shows on your phone, tablet, laptop, and TV.',
     ),
     OnBoardingEntity(
-        image: 'images/background.png',
-        description: "All of Netflix, starting at just 199.",
-        heading: "Unlimited\n entertainment,\n one low price"
+      image: 'images/contract.png',
+      title: 'Create profiles for kids',
+      description: 'Send kids on adventures with their favorite characters in a space made just for them—free with your membership.',
     ),
   ];
 }

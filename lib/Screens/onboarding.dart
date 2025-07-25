@@ -1,101 +1,190 @@
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:netflixclone/Model/onboarding_entity.dart';
+import 'package:netflixclone/nav_helper/nav_helper.dart';
 
-import '../Model/onboarding_entity.dart';
+class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
 
-
-class OnBoardingScreen extends StatefulWidget {
   @override
-  _OnBoardingScreenState createState() => _OnBoardingScreenState();
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
-  final _onBoardingData = OnBoardingEntity.onBoardingData;
-  int _currentPageIndex = 0;
-  PageController _pageController = PageController();
-
-  Timer? _timer;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _startAutoScroll();
-  }
-
-  void _startAutoScroll() {
-    _timer = Timer.periodic(Duration(seconds: 4), (timer) {
-      if (_currentPageIndex < _onBoardingData.length - 1) {
-        _currentPageIndex++;
-        _pageController.animateToPage(
-          _currentPageIndex,
-          duration: Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-        );
-      } else {
-        _timer?.cancel(); // Stop scrolling at last page
-      }
-    });
-  }
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  final List<OnBoardingEntity> onboardingData = OnBoardingEntity.onBoardingData;
 
   @override
   void dispose() {
-    _timer?.cancel();
     _pageController.dispose();
     super.dispose();
   }
 
+  void _onNextPressed() {
+    if (_currentPage < onboardingData.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      _completeOnboarding();
+    }
+  }
+
+  Future<void> _completeOnboarding() async {
+    await NavHelper.setOnboardingSeen();
+    if (mounted) {
+      context.go('/login');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        body: Stack(
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.height < 700;
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
           children: [
-            _pageViewBuilderWidget(),
-            Positioned(
-              bottom: 120,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: SmoothPageIndicator(
-                  controller: _pageController,
-                  count: _onBoardingData.length,
-                  effect: WormEffect(
-                    dotHeight: 10,
-                    dotWidth: 10,
-                    activeDotColor: Colors.red,
-                    dotColor: Colors.grey.shade400,
+            // Skip button at the top
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: isSmallScreen ? 8.0 : 16.0,
+                  right: 16.0,
+                ),
+                child: TextButton(
+                  onPressed: _completeOnboarding,
+                  child: Text(
+                    'onboarding.skip'.tr(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             ),
-
-            // Constant Get Started Button
-            Positioned(
-              bottom: 30,
-              left: 0,
-              right: 0,
-              child: InkWell(
-                onTap: () {
-                  context.goNamed('login');
+            
+            // PageView taking remaining space
+            Expanded(
+              child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() => _currentPage = index);
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Container(
-                      width: double.infinity,
-                      height: 50,
-                      color: Colors.red,
-                      alignment: Alignment.center,
-                      child: Text('Get Started', style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold)
-                      )
+                itemCount: onboardingData.length,
+                itemBuilder: (context, index) {
+                  final data = onboardingData[index];
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenSize.width * 0.08,
+                      vertical: isSmallScreen ? 8.0 : 16.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Image with responsive sizing
+                        SizedBox(
+                          height: isSmallScreen 
+                              ? screenSize.height * 0.25 
+                              : screenSize.height * 0.35,
+                          child: Image.asset(
+                            data.image,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        SizedBox(height: isSmallScreen ? 16 : 24),
+                        
+                        // Title with responsive text size
+                        Text(
+                          'onboarding.title_${index + 1}'.tr(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: isSmallScreen ? 20 : 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: isSmallScreen ? 8 : 16),
+                        
+                        // Description with responsive text size
+                        Text(
+                          'onboarding.desc_${index + 1}'.tr(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: isSmallScreen ? 14 : 16,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            
+            // Bottom navigation section
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: isSmallScreen ? 16.0 : 24.0,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Page indicator
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      onboardingData.length,
+                      (index) => Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: _currentPage == index ? 24 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: _currentPage == index ? Colors.red : Colors.grey,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(height: isSmallScreen ? 16 : 24),
+                  
+                  // Next/Get Started button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _onNextPressed,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: EdgeInsets.symmetric(
+                          vertical: isSmallScreen ? 12 : 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        _currentPage == onboardingData.length - 1
+                            ? 'onboarding.get_started'.tr()
+                            : 'onboarding.next'.tr(),
+                        style: TextStyle(
+                          fontSize: isSmallScreen ? 16 : 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -103,74 +192,4 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       ),
     );
   }
-
-  Widget _pageViewBuilderWidget() {
-    return PageView.builder(
-      itemCount: _onBoardingData.length,
-      controller: _pageController,
-      onPageChanged: (index) {
-        setState(() {
-          _currentPageIndex = index;
-        });
-      },
-      itemBuilder: (ctx, index) {
-        return Stack(
-          fit: StackFit.passthrough,
-          children: [
-            index == 3
-                ? Container(
-              height: double.infinity,
-              child: Image.asset(
-                _onBoardingData[index].image,
-                fit: BoxFit.cover,
-              ),
-            )
-                : Container(
-              margin: EdgeInsets.only(bottom: 40),
-              child: Image.asset(
-                _onBoardingData[index].image,
-              ),
-            ),
-            index == 3
-                ? Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [
-                      Colors.black.withOpacity(.5),
-                      Colors.black.withOpacity(.6),
-                      Colors.black.withOpacity(.9),
-                    ],
-                    tileMode: TileMode.clamp,
-                    begin: Alignment(0.9, 0.0),
-                    end: Alignment(0.8, 0.4)),
-              ),
-            )
-                : Container(),
-            Container(
-              margin: EdgeInsets.only(top: 300, left: 40, right: 40),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _onBoardingData[index].heading,
-                    style: TextStyle(fontSize: 42,fontWeight: FontWeight.bold,color: Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    _onBoardingData[index].description,
-                    style: TextStyle(fontSize: 16),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            )
-          ],
-        );
-      },
-    );
-  }
-
 }
