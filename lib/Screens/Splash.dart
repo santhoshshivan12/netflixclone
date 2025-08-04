@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:netflixclone/nav_helper/nav_route.dart';
+
+import '../utils/SharedPrefHelper.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,7 +22,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     _controller = AnimationController(vsync: this);
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        context.goNamed('onBoarding');
+        if (SharedPrefHelper().getBool('isLoggedIn') ?? false) {
+          context.goNamed('home');
+        } else {
+          context.goNamed('onBoarding');
+        }
       }
     });
   }

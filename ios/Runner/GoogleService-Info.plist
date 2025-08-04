@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.netflixclone</string>
+	<string>com.santhosh.netflixclone</string>
 	<key>PROJECT_ID</key>
 	<string>netflixclone-2ae29</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:193407231025:ios:2deccffddd65fd70872110</string>
+	<string>1:193407231025:ios:530106b9a72b89f9872110</string>
 </dict>
 </plist>

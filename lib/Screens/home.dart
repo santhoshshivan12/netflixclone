@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:netflixclone/Screens/newhot.dart';
 import '../Model/model.dart';
 import '../utils/MovieService.dart';
+import '../widgets/Webview.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,12 +63,23 @@ class _HomeScreenState extends State<HomeScreen> {
           Image.network(
             movies[current].image,
             fit: BoxFit.cover,
-
           ),
+
           Container(
             height: size.height,
             decoration: BoxDecoration(
               color: Colors.black.withOpacity(0.5),
+            ),
+          ),
+          Positioned(
+            top: 40,
+            right: 20,
+            child: InkWell(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Webview()),
+              ),
+              child: const Icon(Icons.public, size: 50, color: Colors.redAccent),
             ),
           ),
           Align(

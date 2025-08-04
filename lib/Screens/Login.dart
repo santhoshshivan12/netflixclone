@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:netflixclone/utils/SharedPrefHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -74,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           content: Text('Login successful'),
           backgroundColor: Colors.green,
         ));
+        SharedPrefHelper().setBool('isLoggedIn', true);
         context.pushReplacement('/home');
         // Example: Navigate to another screen
         // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
